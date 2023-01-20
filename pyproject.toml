@@ -1,14 +1,17 @@
 [tool.poetry]
 name = "zq-django-template"
 version = "0.1.0"
-description = "自强Studio Django 模板"
+description = "自强 Studio Django 模板"
 authors = ["Nagico <yjr888@vip.qq.com>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/Nagico/zq-django-template"
 documentation = "https://zq-django-template.readthedocs.io/en/latest/"
 keywords = ["django", "drf", "template", "cookiecutter"]
-packages = [{include = "zq_django_template"}]
+packages = [
+  { include = "{{cookiecutter.project_name}}" },
+  { include = "cookiecutter.json" },
+]
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
