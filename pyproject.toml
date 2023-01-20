@@ -11,7 +11,7 @@ keywords = ["django", "drf", "template", "cookiecutter"]
 packages = [{include = "zq_django_template"}]
 
 [tool.poetry.dependencies]
-python = ">=3.8.1"
+python = ">=3.8.1,<4.0"
 cookiecutter = "^2.1.1"
 flake8 = "^6.0.0"
 black = "^22.12.0"
