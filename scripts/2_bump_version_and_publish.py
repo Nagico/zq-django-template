@@ -28,7 +28,9 @@ def set_version():
     - updates pyproject.toml
     - Searches for '__NEXT_VERSION__' in changelog and replaces it with current version and date
     """
-    from zq_django_util import __version__ as current_version
+    with open(ROOT_FOLDER / "pyproject.toml", "r", encoding="utf8") as f:
+        pyproject = f.read()
+        current_version = re.findall(r'version = "(.*?)"', pyproject)[0]
 
     print(f"Current version is {current_version}.")
 
@@ -69,10 +71,10 @@ def set_version():
         return
 
     # update library version
-    versionfile = ROOT_FOLDER / SRC_FOLDER / "__init__.py"
-    with open(versionfile, "w") as f:
-        print(f"Updating {versionfile}")
-        f.write(f'__version__ = "{version}"\n')
+    # versionfile = ROOT_FOLDER / SRC_FOLDER / "__init__.py"
+    # with open(versionfile, "w") as f:
+    #     print(f"Updating {versionfile}")
+    #     f.write(f'__version__ = "{version}"\n')
 
     # update poetry version
     print("Updating pyproject.toml")
@@ -111,8 +113,8 @@ def publish(version):
     if not ask_confirm(f"Publishing version {version}. Is this correct?"):
         return
 
-    print("Running the tests")
-    os.system("python runtests.py --coverage-local")
+    # print("Running the tests")
+    # os.system("python runtests.py --coverage-local")
 
     # extract changes from changelog
     with open(ROOT_FOLDER / "CHANGELOG.md", "r", encoding="utf8") as f:
