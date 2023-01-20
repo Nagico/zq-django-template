@@ -9,7 +9,7 @@ import requests
 SRC_FOLDER = "zq_django_util"
 ROOT_FOLDER = Path(__file__).resolve().parent.parent
 os.chdir(ROOT_FOLDER)
-GITHUB_API_ENDPOINT = "https://api.github.com/repos/Nagico/zq-django-util"
+GITHUB_API_ENDPOINT = "https://api.github.com/repos/Nagico/zq-django-template"
 
 
 def ask_confirm(text):
