@@ -108,7 +108,7 @@ OSS 相关：
 
 在 PyCharm 中内置了一些运行配置，可直接使用。
 
-![run config](docs/img/readme/run_config.png)
+![run config](img/usage/run_config.png)
 
 - Local Server: 生产/本地/测试 服务器，使用 development 配置
 - Prod Server: 生产服务器，使用 production 配置
@@ -127,7 +127,7 @@ OSS 相关：
 
 并依次添加 `Django Server`、`Python` 这两类 Configuration Type。
 
-![services](docs/img/readme/services.png)
+![services](img/usage/services.png)
 
 可以在指定项目或者文件夹上右键进行启动
 
@@ -495,7 +495,7 @@ git commit 时，会自动检查代码格式与 commit 规范
 
 当 Commit 时，可以在 `Git` - `Console` 处查看检查结果
 
-![pre commit](docs/img/readme/precommit.png)
+![pre commit](img/usage/precommit.png)
 
 **注意**
 
