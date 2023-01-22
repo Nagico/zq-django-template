@@ -1,15 +1,15 @@
 import sys
 from pathlib import Path
 
-from server.settings.components import *
+from server.settings.components import *  # noqa
 
 from server.settings.util import _ENV
 if _ENV == "development":
-    from server.settings.environments.development import *
+    from server.settings.environments.development import *  # noqa
 elif _ENV == "production":
-    from server.settings.environments.production import *
+    from server.settings.environments.production import *  # noqa
 
-from server.settings.environments.local import *
+from server.settings.environments.local import *  # noqa
 
 # Build paths inside the project like this: BASE_DIR.joinpath('some')
 # `pathlib` is better than writing: dirname(dirname(dirname(__file__)))

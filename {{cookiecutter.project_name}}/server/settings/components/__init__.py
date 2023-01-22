@@ -1,3 +1,4 @@
+# flake8: noqa
 from server.settings.components.caches import *
 {%- if cookiecutter.use_celery == 'y' %}
 from server.settings.components.celery import *
