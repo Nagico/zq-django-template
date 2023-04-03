@@ -1,20 +1,18 @@
 version: "3.8"
 
 x-django: &django
-  image: registry.cn-hangzhou.aliyuncs.com/ziqiang_studio/{{cookiecutter.project_name}}:django
+  image: registry-vpc.cn-hangzhou.aliyuncs.com/ziqiang_studio/{{cookiecutter.project_name}}:django
   env_file: ./.env # ENV file
   depends_on:
     - redis
-  restart: always
   networks:
     - app-net
 
 services:
   ### Caddy container #########################################
   caddy:
-    image: registry.cn-hangzhou.aliyuncs.com/ziqiang_studio/{{cookiecutter.project_name}}:caddy
+    image: registry-vpc.cn-hangzhou.aliyuncs.com/ziqiang_studio/caddy:latest
     container_name: {{cookiecutter.project_name}}-caddy
-    restart: always
     depends_on:
       - django
     networks:
@@ -28,7 +26,7 @@ services:
 
   ### Redis container ##########################################
   redis:
-    image: registry.cn-hangzhou.aliyuncs.com/ziqiang_studio/redis:latest
+    image: registry-vpc.cn-hangzhou.aliyuncs.com/ziqiang_studio/redis:latest
     container_name: {{cookiecutter.project_name}}-redis
     restart: always
     networks:
@@ -66,6 +64,20 @@ services:
     expose:
       - 5555
   {%- endif %}
+
+  { %- if cookiecutter.use_meilisearch == 'y' % }
+  ### Celery container ########################################
+  meili:
+    image: registry-vpc.cn-hangzhou.aliyuncs.com/ziqiang_studio/meilisearch:v1.0.2
+    container_name: {{cookiecutter.project_name}}-meilisearch
+    restart: always
+    networks:
+      - app-net
+    env_file:
+      - ./.env
+    volumes:
+      - ./meili_data:/meili_data
+  { %- endif % }
 
 ### Add Network Bridge info #########################################
 networks:

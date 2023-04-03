@@ -6,15 +6,15 @@ name: Production Server CI/CD
 on:
   workflow_dispatch:
   push:
-#    branches:
-#      - production
+    branches:
+      - production
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: [ 'caddy', 'django' ]
+        image: [ 'django' ]
     steps:
       - name: checkout code
         uses: actions/checkout@v3
@@ -29,7 +29,7 @@ jobs:
       - name: {% raw %}build and push docker image ${{ matrix.image }}{% endraw %}
         run: |
           {% raw %}docker login registry.cn-hangzhou.aliyuncs.com --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}{% endraw %}
-          docker build -f {% raw %}docker/${{ matrix.image }}{% endraw %} -t registry.cn-hangzhou.aliyuncs.com/ziqiang_studio/{{cookiecutter.project_name}}:{% raw %}${{ matrix.image }}{% endraw %} .
+          docker build -f {% raw %}docker/${{ matrix.image }}/Dockerfile{% endraw %} -t registry.cn-hangzhou.aliyuncs.com/ziqiang_studio/{{cookiecutter.project_name}}:{% raw %}${{ matrix.image }}{% endraw %} .
           docker push registry.cn-hangzhou.aliyuncs.com/ziqiang_studio/{{cookiecutter.project_name}}:{% raw %}${{ matrix.image }}{% endraw %}
           docker image prune -f
   deploy:
@@ -45,5 +45,5 @@ jobs:
           password: {% raw %}${{ secrets.SSH_PASSWORD }}{% endraw %}
           script: |
             cd ~/{{cookiecutter.project_name}}
-            {% raw %}docker login registry.cn-hangzhou.aliyuncs.com --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}{% endraw %}
+            {% raw %}docker login registry-vpc.registry.cn-hangzhou.aliyuncs.com --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}{% endraw %}
             docker compose pull

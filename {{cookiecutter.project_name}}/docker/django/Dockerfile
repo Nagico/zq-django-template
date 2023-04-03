@@ -1,11 +1,7 @@
-ARG PYTHON_VERSION=3.10-slim-bullseye
+ARG PYTHON_VERSION=3.11-slim-bullseye
 
 # define an alias for the specfic python version used in this file.
 FROM python:${PYTHON_VERSION} as python
-
-RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list \
-    && sed -i 's/security.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list \
-    && apt-get update
 
 # Python build stage
 FROM python as python-build-stage
@@ -18,15 +14,14 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   build-essential \
   default-libmysqlclient-dev \
   # psycopg2 dependencies
-  libpq-dev \
+  libpq-dev
   # poetry
-  && pip install poetry -i https://pypi.tuna.tsinghua.edu.cn/simple \
-  && poetry --version
+RUN pip install poetry
 
 WORKDIR /tmp
 
 # Gunicon
-RUN pip wheel --wheel-dir /usr/src/app/wheels gunicorn -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip wheel --wheel-dir /usr/src/app/wheels gunicorn
 
 COPY ./pyproject.toml ./poetry.lock /tmp/
 
@@ -34,12 +29,15 @@ RUN echo "$DJANGO_ENV" \
     && poetry config virtualenvs.create false \
     && poetry export \
        $(if [ "$DJANGO_ENV" = 'development' ]; then echo '--with dev'; fi) \
-       --output requirements.txt
+       --output requirements.txt --without-urls
 
 # RUN poetry install
 
 RUN pip wheel --wheel-dir /usr/src/app/wheels  \
   -r requirements.txt
+
+# Delete setuptools and pip to avoid conflicts with the system packages
+RUN rm -rf /usr/src/app/wheels/setuptools* /usr/src/app/wheels/pip*
 
 FROM python as python-run-stage
 
@@ -50,10 +48,6 @@ ENV PYTHONDONTWRITEBYTECODE 1
 
 WORKDIR ${APP_HOME}
 
-RUN addgroup --system django \
-    && adduser --system --ingroup django django
-
-
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
   # psycopg2 dependencies
@@ -62,9 +56,14 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   gettext \
   vim \
   curl \
+  default-libmysqlclient-dev \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
+
+# change mirror
+RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list \
+    && sed -i 's/security.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 
 # All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
 # copy python dependency wheels from python-build-stage
@@ -74,9 +73,9 @@ COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
 RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
   && rm -rf /wheels/
 
-COPY --chown=django:django ./docker/django/gunicorn_config.py gunicorn_config.py
+COPY ./docker/django/gunicorn_config.py gunicorn_config.py
 
-COPY --chown=django:django ./docker/django/start.sh start.sh
+COPY ./docker/django/start.sh start.sh
 RUN sed -i 's/\r$//g' start.sh && chmod +x start.sh
 
 {%- if cookiecutter.use_celery == 'y' %}
@@ -89,16 +88,10 @@ RUN sed -i 's/\r$//g' start-celeryworker.sh && chmod +x start-celeryworker.sh \
 {%- endif %}
 
 # copy application code to WORKDIR
-COPY --chown=django:django ./manage.py manage.py
-COPY --chown=django:django ./config/ config/
-COPY --chown=django:django ./server/ server/
+COPY  ./manage.py manage.py
+COPY ./server/ server/
 
-# make django owner of the WORKDIR directory as well.
-RUN chown django:django ${APP_HOME}
-
-USER django
-
-HEALTHCHECK --interval=30s --timeout=30s --retries=3 CMD curl localhost:8000 || exit 1
+HEALTHCHECK --interval=30s --timeout=30s --retries=3 CMD curl localhost:8000/api || exit 1
 
 EXPOSE 8000
 
