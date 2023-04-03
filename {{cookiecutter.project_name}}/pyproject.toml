@@ -11,7 +11,7 @@ default = true
 url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 
 [tool.poetry.dependencies]
-python = ">=3.8.1,<4.0"
+python = ">=3.9,<4.0"
 django = "^4.1.4"
 djangorestframework = "^3.14.0"
 django-cors-headers = "^3.13.0"
@@ -33,7 +33,9 @@ werkzeug = "^2.2.2"
 django-cache-url = "^3.4.4"
 dj-database-url = "^1.2.0"
 hiredis = "^2.1.0"
-zq-django-util = "^0.1.2"
+django-cleanup = "^6.0.0"
+zq-django-util = "^0.1.10"
+zq-auth-sdk = "^0.1.0"
 {%- if cookiecutter.use_wechat == 'y' %}
 wechatpy = "^1.8.18"
 {%- endif %}
@@ -46,6 +48,10 @@ django-celery-results = "^2.4.0"
 django-celery-beat = "^2.4.0"
 flower = "^1.2.0"
 {%- endif %}
+{%- if cookiecutter.use_meilisearch == 'y' %}
+meilisearch = "^0.26.0"
+{%- endif %}
+
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^2.20.0"
