@@ -8,24 +8,22 @@ ALLOWED_HOSTS = ["*"]
 
 SERVER_URL = "http://127.0.0.1:8000"
 
-# region Database
-
-# MySQL
-# DatabaseConfig.url = "mysql://USERNAME:PASSWORD@HOST:PORT/DB"
-# DATABASES = DatabaseConfig.get()
-
-# SQLite
-DATABASES = DatabaseConfig.get()
-# endregion
-
-# region Cache
-
-# Redis
-# CacheConfig.url = "redis://USERNAME:PASSWORD@HOST:PORT/"
-# CACHE = CacheConfig.get()
-{%- if cookiecutter.use_celery == 'y' %}
-CELERY_BROKER_URL = config("CELERY_BROKER_URL", config("REDIS_URL"))
-{%- endif %}
-# endregion
 
 ZQ_EXCEPTION["EXCEPTION_UNKNOWN_HANDLE"] = False
+
+
+QUERYCOUNT = {
+    "THRESHOLDS": {
+        "MEDIUM": 50,
+        "HIGH": 200,
+        "MIN_TIME_TO_LOG": 0,
+        "MIN_QUERY_COUNT_TO_LOG": 0,
+    },
+    "IGNORE_REQUEST_PATTERNS": [],
+    "IGNORE_SQL_PATTERNS": [],
+    "DISPLAY_DUPLICATES": 10,
+    "RESPONSE_HEADER": "X-DjangoQueryCount-Count",
+}
+
+
+CACHEOPS = {}

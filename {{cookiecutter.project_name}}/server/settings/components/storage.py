@@ -3,9 +3,9 @@ from server.settings.util import BASE_DIR, config
 # region Static files
 # https://docs.djangoproject.com/en/2.2/howto/static-files
 
-STATIC_URL = "/static/"
+STATIC_URL = "https://zq-public-oss.oss-cn-hangzhou.aliyuncs.com/zq-auth/backend/static/static/"
 
-STATIC_ROOT = str(BASE_DIR.joinpath("docker", "caddy", "static"))
+STATIC_ROOT = str(BASE_DIR.joinpath("static"))
 # endregion
 
 # region 媒体文件

@@ -1,6 +1,6 @@
 from django.db import models
 
-from server.utils.choices import FileTypeChoice
+from server.utils.choices.types import FileType
 
 
 class File(models.Model):
@@ -20,8 +20,8 @@ class File(models.Model):
     size = models.IntegerField(verbose_name="文件大小", default=0)
 
     type = models.IntegerField(
-        choices=FileTypeChoice.choices,
-        default=FileTypeChoice.UNKNOWN,
+        choices=FileType.choices,
+        default=FileType.UNKNOWN,
         verbose_name="文件类型",
     )
 
@@ -43,7 +43,7 @@ class File(models.Model):
         constraints = [
             models.CheckConstraint(
                 name="%(app_label)s_%(class)s_type_valid",
-                check=models.Q(type__in=FileTypeChoice.values),
+                check=models.Q(type__in=FileType.values),
             )
         ]
 

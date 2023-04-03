@@ -1,5 +1,9 @@
 # [zq backend] git ignore
 
+tmp/
+.env*
+!.env.example
+
 /logs
 
 /server/settings/environments/local.py

@@ -13,65 +13,6 @@ from server.settings.util import BASE_DIR, config
 
 SECRET_KEY = config("DJANGO_SECRET_KEY")
 
-# region Application
-
-DJANGO_APPS: list[str] = [
-    "simpleui",  # admin ui（必须在第一行）
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles"
-]
-
-THIRD_PARTY_APPS: list[str] = [
-    "rest_framework",  # DRF
-    "corsheaders",  # CORS 跨域
-    "rest_framework_simplejwt",  # JWT
-    "drf_spectacular",  # api 文档
-    "django_filters",  # 过滤器
-    "zq_django_util.utils.oss",  # oss
-    "method_override",  # 方法重写
-    "drf_standardized_errors",  # drf错误初步处理
-    'django_extensions',  # Django 扩展
-{%- if cookiecutter.use_celery == 'y' %}
-    "django_celery_results",  # celery兼容支持
-    "django_celery_beat",  # celery定时任务
-{%- endif %}
-    'zq_django_util.logs',  # 日志记录
-]
-
-LOCAL_APPS: list[str] = [
-{%- if cookiecutter.use_celery == 'y' %}
-    "async_tasks",  # celery异步任务
-{%- endif %}
-    "users",  # 用户
-    "oauth",  # 认证
-    "files",  # 文件
-]
-
-INSTALLED_APPS: list[str] = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
-
-MIDDLEWARE: list[str] = [
-    "corsheaders.middleware.CorsMiddleware",  # CORS 跨域(最外层)
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "method_override.middleware.MethodOverrideMiddleware",  # 请求方法修改
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "zq_django_util.logs.middleware.APILoggerMiddleware",  # 请求日志
-]
-
-ROOT_URLCONF = "server.urls"
-
-WSGI_APPLICATION = "server.wsgi.application"
-ASGI_APPLICATION = "server.asgi.application"
-
-# endregion
 
 # region Templates
 TEMPLATES = [
@@ -126,15 +67,21 @@ USE_L10N = True
 USE_TZ = True
 # endregion
 
-# region CORS
+# region Security
 CORS_ORIGIN_WHITELIST = (
     "http://127.0.0.1:8000",
     "http://localhost:8000",
-    "https://127.0.0.1:8000",
-    "https://localhost:8000",
+    # ADD YOUR DOMAIN HERE
 )
 
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
+
+# 支持前端 sentry 追踪
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "baggage",
+    "sentry-trace",
+]
+
 # endregion
 
 # region JWT
@@ -156,3 +103,6 @@ RUNSERVER_PLUS_EXCLUDE_PATTERNS = [
     "*\\Lib\\*",
     "*/Lib/*",
 ]
+
+# reverse proxy scheme detect
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

@@ -17,7 +17,7 @@ if SENTRY_ENABLE:
         # Set traces_sample_rate to 1.0 to capture 100%
         # of transactions for performance monitoring.
         # We recommend adjusting this value in production.
-        traces_sample_rate=1.0 if config("DEBUG", False) else 0.8,
+        traces_sample_rate=0.05,
         debug=config("DEBUG", False),
         environment=config("DJANGO_ENV", "production"),
         # If you wish to associate users to errors (assuming you are using

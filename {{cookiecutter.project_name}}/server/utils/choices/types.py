@@ -1,13 +1,12 @@
-# 枚举类型
 from django.db import models
 
 
-class FileTypeChoice(models.IntegerChoices):
+class FileType(models.IntegerChoices):
     """
-    文件类型
+    文件类型状态
     """
 
     UNKNOWN = 0, "未知"
     RESUME = 1, "简历"
     WORK = 2, "作品"
-    OTHER = 3, "其他"
+    MANAGER = 3, "管理员"

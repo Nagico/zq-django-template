@@ -45,7 +45,7 @@ class CacheConfig:
     CACHES: dict[str, int] = {  # {Cache名称: 编号}
         "default": 0,
         "session": 1,
-        "wechat_session": 2,  # wechat
+        "third_session": 2,  # 第三方登录缓存
         "db_cache": 3,  # 数据库缓存
         "view": 4,  # 视图缓存
         "celery": 5,  # celery缓存

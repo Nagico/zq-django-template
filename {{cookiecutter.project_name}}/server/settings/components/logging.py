@@ -16,8 +16,25 @@ DRF_LOGGER = {
         "POST, PUT, PATCH, DELETE",
         cast=lambda v: [s.strip() for s in v.split(",")],
     ),
+    "SKIP_URL_NAME": ["test-list", "base-test-list"],  # 忽略测试 api 的日志
+    "SENSITIVE_KEYS": ["password"],  # 需要隐藏的字段
 }
 # endregion
 
-# 適配loguru
+# 适配loguru
 LOGGING = LogConfig.get_config()
+
+logger.configure(
+    handlers=[
+        {
+            "sink": sys.stderr,
+            "level": config("LOG_LEVEL", "INFO"),
+            "format": (
+                "<blue>{time:HH:mm:ss.SSS}</blue> | "
+                "<level>{level: <8}</level> | "
+                "<level>{message}</level> - "
+                "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan>"
+            ),
+        }
+    ],
+)

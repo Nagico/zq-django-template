@@ -14,16 +14,9 @@ from server.settings.components.drf import REST_FRAMEWORK
 
 DEBUG = True
 
-SERVER_URL = "https://"
+SERVER_URL = config("SERVER_URL", "https://api.test.{{cookiecutter.project_name}}.ziqiang.net.cn")
 
 ALLOWED_HOSTS = ["*"]
-
-CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:8000",
-    "http://localhost:8000",
-]
-
-CSRF_TRUSTED_ORIGINS += [SERVER_URL]
 
 # Installed apps for development only:
 
@@ -70,6 +63,30 @@ DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": "server.settings.environments.development._custom_show_toolbar",
 }
 
+# django-querycount
+# https://github.com/bradmontgomery/django-querycount
+QUERYCOUNT = {
+    "THRESHOLDS": {
+        "MEDIUM": 50,
+        "HIGH": 200,
+        "MIN_TIME_TO_LOG": 0,
+        "MIN_QUERY_COUNT_TO_LOG": 0,
+    },
+    "IGNORE_REQUEST_PATTERNS": [
+        r"^/admin/.*",
+        r"^/static/.*",
+        r"^/media/.*",
+        r"^/favicon.ico$",
+        r"^/robots.txt$",
+        r"^/api/$",
+        r"^/api$",
+        r"^/$",
+    ],
+    "IGNORE_SQL_PATTERNS": [],
+    "DISPLAY_DUPLICATES": None,
+    "RESPONSE_HEADER": "X-DjangoQueryCount-Count",
+}
+
 
 # nplusone
 # https://github.com/jmcarp/nplusone
@@ -82,7 +99,7 @@ MIDDLEWARE = [  # noqa: WPS440
 # Logging N+1 requests:
 NPLUSONE_RAISE = False  # comment out if you want to allow N+1 requests
 NPLUSONE_LOGGER = logger
-NPLUSONE_LOG_LEVEL = logger.level("INFO")
+NPLUSONE_LOG_LEVEL = "WARNING"
 NPLUSONE_WHITELIST = [
     {"model": "admin.*"},
 ]
@@ -97,6 +114,12 @@ DTM_IGNORED_MIGRATIONS = frozenset((("axes", "*"),))
 
 # django-extra-checks
 # https://github.com/kalekseev/django-extra-checks
+
+def skip_if_symmetrical_is_not(field, *args, **kwargs):
+    if field.remote_field is None:
+        return False
+    return not field.remote_field.symmetrical
+
 
 EXTRA_CHECKS = {
     "checks": [
@@ -122,11 +145,8 @@ EXTRA_CHECKS = {
         # If field nullable `(null=True)`,
         # then default=None argument is redundant and should be removed:
         "field-default-null",
-        # Fields with choices must have companion CheckConstraint
-        # to enforce choices on database level
-        "field-choices-constraint",
-        # Related fields must specify related_name explicitly:
-        "field-related-name",
+        #  Related fields must specify related_name explicitly:
+        {"id": "field-related-name", "skipif": skip_if_symmetrical_is_not},
     ],
 }
 

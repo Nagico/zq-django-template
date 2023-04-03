@@ -60,6 +60,15 @@ def remove_wechat_files():
         os.remove(file_name)
 
 
+def remove_meilisearch_files():
+    file_names = [
+        os.path.join("server", "settings", "components", "meili.py"),
+    ]
+    for file_name in file_names:
+        os.remove(file_name)
+
+
+
 def generate_random_string(
     length, using_digits=False, using_ascii_letters=False, using_punctuation=False
 ):
@@ -197,6 +206,9 @@ def main():
 
     if "{{ cookiecutter.use_wechat }}".lower() == "n":
         remove_wechat_files()
+
+    if "{{ cookiecutter.use_meilisearch }}".lower() == "n":
+        remove_meilisearch_files()
 
     os.rename(os.path.join("config", ".env.template"), os.path.join("config", ".env"))
     os.rename(os.path.join(".gitignore.template"), os.path.join(".gitignore"))
