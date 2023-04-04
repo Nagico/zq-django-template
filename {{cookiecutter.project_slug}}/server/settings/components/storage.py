@@ -13,18 +13,19 @@ MEDIA_URL = "/media/"
 # endregion
 
 # region oss
-DEFAULT_FILE_STORAGE = "zq_django_util.utils.oss.backends.OssMediaStorage"
+if config("ALIYUN_OSS_ACCESS_KEY_ID", "") != "":
+    ALIYUN_OSS = {
+        "ACCESS_KEY_ID": config("ALIYUN_OSS_ACCESS_KEY_ID", ""),
+        "ACCESS_KEY_SECRET": config("ALIYUN_OSS_ACCESS_KEY_SECRET", ""),
+        "ENDPOINT": "https://oss-cn-hangzhou.aliyuncs.com",
+        "BUCKET_NAME": config("ALIYUN_OSS_BUCKET_NAME", ""),
+        "URL_EXPIRE_SECOND": 60 * 60 * 24 * 30,
+        "TOKEN_EXPIRE_SECOND": 60,
+        "MAX_SIZE_MB": 100,
+    }
 
-ALIYUN_OSS = {
-    "ACCESS_KEY_ID": config("ALIYUN_OSS_ACCESS_KEY_ID", ""),
-    "ACCESS_KEY_SECRET": config("ALIYUN_OSS_ACCESS_KEY_SECRET", ""),
-    "ENDPOINT": "https://oss-cn-hangzhou.aliyuncs.com",
-    "BUCKET_NAME": config("ALIYUN_OSS_BUCKET_NAME", ""),
-    "URL_EXPIRE_SECOND": 60 * 60 * 24 * 30,
-    "TOKEN_EXPIRE_SECOND": 60,
-    "MAX_SIZE_MB": 100,
-}
-
-assert ALIYUN_OSS["ACCESS_KEY_SECRET"], "ALIYUN_OSS_ACCESS_KEY_SECRET is required"
+    DEFAULT_FILE_STORAGE = "zq_django_util.utils.oss.backends.OssMediaStorage"
+else:
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 # endregion

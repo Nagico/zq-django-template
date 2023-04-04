@@ -31,6 +31,7 @@ def pytest_configure(config):
 
     os.environ["DATABASE_URL"] = "sqlite:///:memory:"
     os.environ["CACHE_URL"] = "locmem://"
+    os.environ["CELERY_BROKER_URL"] = "memory://"
 
     django.setup()
 
