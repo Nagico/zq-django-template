@@ -1,8 +1,6 @@
 import os
 import shlex
 import subprocess
-from pathlib import Path
-from time import sleep
 
 from django.conf import settings
 from django.utils import autoreload
@@ -86,7 +84,7 @@ class Command(BaseCommand):
         if self.conda_env_name is not None:
             logger.info('Conda env name: {}', self.conda_env_name)
             self.conda_activate_command = f'conda activate {self.conda_env_name}'
-            self.conda_deactivate_command = f'conda deactivate'
+            self.conda_deactivate_command = 'conda deactivate'
 
     def run_command(self, command):
         if self.conda_env_name is not None:

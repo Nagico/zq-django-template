@@ -1,7 +1,6 @@
 import random
 
 from django.core.cache import cache
-from loguru import logger
 from zq_django_util.exceptions import ApiException
 from zq_django_util.response import ResponseType
 {%- if cookiecutter.use_celery == 'y' %}

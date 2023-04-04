@@ -1,5 +1,5 @@
 from server.settings.components import config
-from server.settings.components.configs import CacheConfig, DatabaseConfig
+from server.settings.components.configs import CacheConfig
 
 # debug 模式
 DEBUG = config("DJANGO_DEBUG", False, cast=bool)

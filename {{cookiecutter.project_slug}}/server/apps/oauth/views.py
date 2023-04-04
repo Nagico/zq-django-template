@@ -66,7 +66,7 @@ class ZqAuthLoginView(TokenObtainPairView):
     zq auth 登录视图
     """
 
-    queryset = Student.objects.all()
+    queryset = User.objects.all()
     serializer_class = ZqAuthLoginSerializer
 
     def post(self, request, *args, **kwargs):

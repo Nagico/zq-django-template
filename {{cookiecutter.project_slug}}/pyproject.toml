@@ -34,6 +34,7 @@ django-cache-url = "^3.4.4"
 dj-database-url = "^1.2.0"
 hiredis = "^2.1.0"
 django-cleanup = "^6.0.0"
+django-cacheops = "^6.1"
 zq-django-util = "^0.1.10"
 zq-auth-sdk = "^0.1.0"
 {%- if cookiecutter.use_wechat == 'y' %}

@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from users.models import Student
+from users.models import User
 from zq_auth_sdk import (
     ThirdLoginFailedException,
     UserNotFoundException,
@@ -32,7 +32,7 @@ def get_union_id(code: str) -> UUID:
         raise ApiException(ResponseType.ThirdServiceError, inner=e)
 
 
-def fetch_user_info(user: Student | UUID) -> dict:
+def fetch_user_info(user: User | UUID) -> dict:
     """
     获取用户信息
 
@@ -44,14 +44,14 @@ def fetch_user_info(user: Student | UUID) -> dict:
     :raise UserNotFoundException: 用户不存在
     """
     try:
-        if isinstance(user, Student):
+        if isinstance(user, User):
             user = user.union_id
 
         data = zq_client.app.user_info(user, True)
 
         return {
             "name": data["name"],
-            "student_id": data["student_id"],
+            "User_id": data["User_id"],
             "phone": data["phone"],
             "update_time": datetime.fromisoformat(data["update_time"]),
         }
@@ -61,7 +61,7 @@ def fetch_user_info(user: Student | UUID) -> dict:
         raise ApiException(ResponseType.ThirdServiceError, inner=e)
 
 
-def get_user_info_update_time(user: Student) -> datetime:
+def get_user_info_update_time(user: User) -> datetime:
     """
     获取用户信息更新时间
 

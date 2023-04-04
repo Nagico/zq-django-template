@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import datetime
 
+from corsheaders.defaults import default_headers
+
 from server.settings.util import BASE_DIR, config
 
 SECRET_KEY = config("DJANGO_SECRET_KEY")

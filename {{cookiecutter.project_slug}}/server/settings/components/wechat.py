@@ -1,4 +1,4 @@
 from server.settings.util import config
 
-APPID = config("WECHAT_APPID")
-SECRET = config("WECHAT_SECRET")
+WECHAT_APPID = config("WECHAT_APPID")
+WECHAT_SECRET = config("WECHAT_SECRET")

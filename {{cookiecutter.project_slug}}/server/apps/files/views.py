@@ -13,7 +13,7 @@ from files.models import File
 from files.serializers import FileCreateSerializer, FileSerializer
 from users.models import User
 
-from server.utils.choices import FileTypeChoice
+from server.utils.choices.types import FileType
 
 
 class FileViewSet(ModelViewSet):
@@ -81,7 +81,7 @@ class FileViewSet(ModelViewSet):
 
         info: dict | None = None
 
-        if upload_type in FileTypeChoice.choices:
+        if upload_type in FileType.choices:
             name, ext = split_file_name(filename)
             file = File.objects.create(user=user, name=name, ext=ext)
 
@@ -123,10 +123,10 @@ class FileViewSet(ModelViewSet):
         url = request.data.get("file")
         name = url.lstrip(settings.MEDIA_URL.lstrip("/"))
 
-        if upload_type in FileTypeChoice.choices:
+        if upload_type in FileType.choices:
             instance.file.name = name
             instance.size = request.data.get("size")
-            instance.type = FileTypeChoice(upload_type)
+            instance.type = FileType(upload_type)
         else:
             raise ApiException(
                 ResponseType.ParamValidationFailed,

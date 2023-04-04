@@ -10,13 +10,13 @@ from zq_django_util.utils.auth.backends import OpenIdBackend
 {%- if cookiecutter.use_wechat == 'y' %}
 from zq_django_util.utils.auth.serializers import (
     OpenIdLoginSerializer as DefaultOpenIdLoginSerializer,
-    PasswordLoginSerializer as DefaultPasswordLoginSerializer,
 )
 {%- endif %}
 
 from users.models import User
 from oauth.utils import VerifyCodeUtil
-from server.bussiness.ziqiang.auth import fetch_user_info, get_union_id
+from oauth.backends import UnionIdBackend
+from server.bussiness.ziqiang.auth import get_union_id
 {%- if cookiecutter.use_wechat == 'y' %}
 from server.bussiness.wechat.wxa import get_openid
 {%- endif %}
@@ -34,7 +34,7 @@ class OpenIdLoginSerializer(DefaultOpenIdLoginSerializer):
         super().__init__(*args, **kwargs)
 
     @classmethod
-    def get_token(cls, user: AuthUser):
+    def get_token(cls, user: User):
         """
         自定义 jwt payload
         """
@@ -44,7 +44,7 @@ class OpenIdLoginSerializer(DefaultOpenIdLoginSerializer):
 
     def generate_token_result(
         self,
-        user: AuthUser,
+        user: User,
         user_id_field: str,
         expire_time: datetime,
         access: str,
@@ -69,7 +69,7 @@ class OpenIdLoginSerializer(DefaultOpenIdLoginSerializer):
             refresh=refresh,
         )
 
-    def handle_new_openid(self, openid: str) -> Student:
+    def handle_new_openid(self, openid: str) -> User:
         """
         重写处理新 openid 方法
         """
@@ -110,7 +110,7 @@ class ZqAuthLoginSerializer(DefaultOpenIdLoginSerializer):
         super().__init__(*args, **kwargs)
 
     @classmethod
-    def get_token(cls, user: AuthUser):
+    def get_token(cls, user: User):
         """
         自定义 jwt payload
         """
@@ -120,7 +120,7 @@ class ZqAuthLoginSerializer(DefaultOpenIdLoginSerializer):
 
     def generate_token_result(
         self,
-        user: AuthUser,
+        user: User,
         user_id_field: str,
         expire_time: datetime,
         access: str,
@@ -165,7 +165,7 @@ class PasswordLoginSerializer(DefaultOpenIdLoginSerializer):
 
     def generate_token_result(
         self,
-        user: AuthUser,
+        user: User,
         user_id_field: str,
         expire_time: datetime,
         access: str,

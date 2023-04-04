@@ -1,8 +1,6 @@
 import copy
 import zoneinfo
 
-from django.conf import settings
-from loguru import logger
 from wechatpy import WeChatClientException
 from zq_django_util.exceptions import ApiException
 from zq_django_util.response import ResponseType

@@ -1,5 +1,10 @@
 # Redis
+import urllib
+
+from loguru import logger
+
 from server.settings.components.configs import CacheConfig
+from server.settings.util import config
 
 CACHES = CacheConfig.get()
 
@@ -13,7 +18,7 @@ SESSION_CACHE_ALIAS = "session"
 # region CACHEOPS
 # https://github.com/Suor/django-cacheops
 
-if config("CACHE_URL").startswith("redis://"):
+if config("CACHE_URL", "").startswith("redis://"):
     CACHEOPS_REDIS = config("CACHE_URL")
     if CACHEOPS_REDIS.endswith("/"):
         CACHEOPS_REDIS = CACHEOPS_REDIS[:-1]

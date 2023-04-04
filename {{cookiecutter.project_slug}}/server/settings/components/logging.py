@@ -1,7 +1,11 @@
 # Logging
 # https://docs.djangoproject.com/en/3.2/topics/logging/
-from server.settings.util import config
+import sys
+
+from loguru import logger
+
 from server.settings.components.configs import LogConfig
+from server.settings.util import config
 
 # See also:
 # 'Do not log' by Nikita Sobolev (@sobolevn)
@@ -21,7 +25,7 @@ DRF_LOGGER = {
 }
 # endregion
 
-# 适配loguru
+# 適配loguru
 LOGGING = LogConfig.get_config()
 
 logger.configure(
