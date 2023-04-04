@@ -183,10 +183,19 @@ zq_xxx_backend/  项目根目录
   |  |  | logging_handler.py  loguru 日志处理器
   |  |  | permissions.py  权限控制
   |  |  | serializers.py  可公用的序列化器
-  |  |  | wechat.py  微信相关工具函数
   |  |
   |  | celery.py  celery 配置
   |  | urls.py  路由配置
+  |
+  | business/  第三方服务
+  |  | wechat/  微信服务
+  |  | ziqiang/ 自强服务
+  |
+  | tests/  测试
+  |  | apps/  应用测试
+  |  | business/  第三方服务测试
+  |  | .coveragerc  测试覆盖率配置
+  |  | conftest.py  pytest 配置与公用 fixture
   |
   | .dockerignore  docker 忽略文件
   | .editorconfig  编辑器配置
@@ -197,6 +206,7 @@ zq_xxx_backend/  项目根目录
   | poetry.lock  项目依赖锁定文件
   | pyproject.toml  项目配置+依赖
   | README.md  项目说明
+  | runtests.py  手动测试脚本
 ```
 
 ### 4.1. .github/workflows/
@@ -310,16 +320,21 @@ Celery 配置，添加了时区、django 支持等参数
 基础配置
 
 - SECRET_KEY: 项目密钥，自动从环境变量获取
-- DJANGO_APPS: Django 自带的应用，一般不用添加
-- THIRD_PARTY_APPS: 第三方应用，安装第三方应用时需要添加到这里
-- LOCAL_APPS: 本地应用，添加本地应用时需要添加到这里
-- MIDDLEWARE: 中间件
 - CORS_ORIGIN_WHITELIST: CORS 白名单，用于配置**跨域访问**
 - SIMPLE_JWT: JWT 配置，一般不用修改
 - AUTH_USER_MODEL: **用户模型**，一般不用修改，可以直接修改 users 应用下的 `models.py` 文件
 - USER_ID_FIELD: 用户模型的主键字段，一般不用修改
 
-#### 4.4.5. configs.py
+#### 4.4.5. apps.py
+
+应用配置
+
+- DJANGO_APPS: Django 自带的应用，一般不用添加
+- THIRD_PARTY_APPS: 第三方应用，安装第三方应用时需要添加到这里
+- LOCAL_APPS: 本地应用，添加本地应用时需要添加到这里
+- MIDDLEWARE: 中间件
+
+#### 4.4.6. configs.py
 
 **数据库**、**缓存**、日志等配置类，用于生成 django 配置
 
@@ -327,11 +342,11 @@ Celery 配置，添加了时区、django 支持等参数
 - CacheConfig: 根据 `CACHES` 下的字段与给定的 `CACHE_URL` 生成缓存配置
 - LogConfig: 使用 loguru 代替默认的日志框架，一般无需修改
 
-#### 4.4.6. databases.py
+#### 4.4.7. databases.py
 
 数据库配置，调用 `DatabaseConfig` 生成数据库配置，基本上不需要修改
 
-#### 4.4.7. django_utils.py
+#### 4.4.8. django_utils.py
 
 zq-django-util 配置
 
@@ -340,25 +355,25 @@ zq-django-util 配置
 
 详细内容可参考 [zq-django-util](https://zq-django-util.readthedocs.io/en/latest/usage/exception_response_log/)
 
-#### 4.4.8. drf.py
+#### 4.4.9. drf.py
 
 drf 配置
 
 - DEFAULT_PERMISSION_CLASSES: 默认权限类，可根据实际需要修改
 
-#### 4.4.9. logging.py
+#### 4.4.10. logging.py
 
 日志配置，调用 `LogConfig` 生成日志配置，基本上不需要修改
 
 `DRF_LOGGER` 请参考 [zq-django-util](https://zq-django-util.readthedocs.io/en/latest/usage/exception_response_log/)
 
-#### 4.4.10. sentry.py
+#### 4.4.11. sentry.py
 
 sentry 配置，可根据 [sentry](https://docs.sentry.io/platforms/python/django/) 文档进行配置
 
 其中 `debug`、`dsn`、`environment`、`traces_sample_rate` 会自动配置
 
-#### 4.4.11. server_url.py
+#### 4.4.12. server_url.py
 
 服务器地址配置，目前仅用于微信小程序二维码生成时判断 `release` 或 `trial` 环境
 
@@ -366,11 +381,11 @@ sentry 配置，可根据 [sentry](https://docs.sentry.io/platforms/python/djang
 - PRODUCTION_SERVER_LIST: 生产环境服务器地址列表，用于判断当前环境是否为生产环境
 - DEVELOPMENT_SERVER_LIST: 开发环境服务器地址列表，用于判断当前环境是否为开发环境
 
-#### 4.4.12. simpleui.py
+#### 4.4.13. simpleui.py
 
 admin 界面配置，可根据 [simpleui](https://simpleui.72wo.com/docs/simpleui/QUICK.html#%E8%8F%9C%E5%8D%95) 进行自定义菜单配置
 
-#### 4.4.13. storage.py
+#### 4.4.14. storage.py
 
 OSS 文件存储配置
 
@@ -378,9 +393,9 @@ OSS 文件存储配置
 
 其余配置需要根据实际情况进行修改，详细内容可参考 [zq-django-util OSS](https://zq-django-util.readthedocs.io/en/latest/usage/oss_storage/)
 
-#### 4.4.14. wechat.py
+#### 4.4.15. wechat.py
 
-微信配置，`APPID` 与 `APPSECRET` 会自动从环境变量获取，并在 `utils/wechat.py` 中使用
+微信配置，`WECHAT_APPID` 与 `WECHAT_APPID` 会自动从环境变量获取，并在 `utils/wechat.py` 中使用
 
 ### 4.5. server/settings/environments
 
@@ -475,7 +490,6 @@ python ../../manage.py startapp <app_name>
 ├── models.py  数据库模型
 ├── serializers.py  序列化器
 ├── tasks.py  Celery 任务（自动被 celery 识别）
-├── tests.py  单元测试
 ├── urls.py  路由
 └── views.py  视图
 ```
@@ -483,7 +497,7 @@ python ../../manage.py startapp <app_name>
 **注意：**
 1. Python 不同于 Java。Java 中一个文件就是一个类，而 Python 中一个文件可以包含多个类。所以在 Python 中可以把多个序列化器类放入 `serializers.py` 一个文件中，但数量过多时也可以将 `serializers.py` 替换为 `serializers` 文件夹，并在下面放入多个文件，每个文件表示一类相关联的序列化器类。
 
-2. 单元测试可以放在 `server/apps/<app_name>/tests.py` 中，也可以统一放在 `server/tests` 文件夹下。前者是只对该应用进行测试，后者是综合测试。
+2. 单元测试建议统一放在 `server/tests/apps/<app_name>` 文件夹下。
 
 3. 需要在设置中注册新应用，在根 `urls.py` 中注册子路由
 
