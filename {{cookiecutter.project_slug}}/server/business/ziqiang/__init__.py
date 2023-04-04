@@ -18,8 +18,13 @@ class ZqAuthCache(SessionStorage):
         self.cache.delete(key)
 
 
-zq_client = ZqAuthClient(
-    settings.ZQAUTH_APPID,
-    settings.ZQAUTH_SECRET,
-    storage=ZqAuthCache(caches["third_session"]),
-)
+if settings._ENV == "test":
+    from unittest import mock
+
+    zq_client = mock.MagicMock()
+else:
+    zq_client = ZqAuthClient(
+        settings.ZQAUTH_APPID,
+        settings.ZQAUTH_SECRET,
+        storage=ZqAuthCache(caches["third_session"]),
+    )

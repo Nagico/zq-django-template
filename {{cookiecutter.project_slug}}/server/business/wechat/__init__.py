@@ -18,7 +18,11 @@ class WechatCache(SessionStorage):
         self.cache.delete(key)
 
 
-if settings.WECHAT_APPID:
+if settings._ENV == "test":
+    from unittest import mock
+
+    wechat_client = mock.MagicMock()
+else:
     wechat_client = WeChatClient(
         settings.WECHAT_APPID,
         settings.WECHAT_SECRET,
