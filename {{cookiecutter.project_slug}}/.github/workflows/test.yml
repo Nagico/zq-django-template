@@ -37,10 +37,10 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache
-          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+          key: {% raw %}venv-${{ runner.os }}-{% raw %}${{ hashFiles('**/poetry.lock') }}{% endraw %}
           restore-keys: |
-            venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
-            venv-${{ runner.os }}-
+            {% raw %}venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}{% endraw %}
+            {% raw %}venv-${{ runner.os }}-{% endraw %}
       - name: Install dependencies
         run: |
           poetry export --with test --without dev --output requirements.txt --without-urls
@@ -55,7 +55,7 @@ jobs:
   #      - name: Upload coverage
   #        uses: codecov/codecov-action@v3
   #        with:
-  #          token: ${{ secrets.CODECOV_TOKEN }}
+  #          token: {% raw %}${{ secrets.CODECOV_TOKEN }}{% endraw %}
   #          file: ./coverage.xml
   #          fail_ci_if_error: true
 
