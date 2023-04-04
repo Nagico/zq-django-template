@@ -5,7 +5,11 @@ from server.settings.components.configs import CacheConfig
 DEBUG = config("DJANGO_DEBUG", False, cast=bool)
 
 ALLOWED_HOSTS = [
-    # Add your domain here
+    "localhost",
+    "{{cookiecutter.project_name}}.ziqiang.net.cn",
+    "api.{{cookiecutter.project_name}}.ziqiang.net.cn",
+    "test.{{cookiecutter.project_name}}.ziqiang.net.cn",
+    "api.test.{{cookiecutter.project_name}}.ziqiang.net.cn",
 ]
 
 SERVER_URL = config("SERVER_URL", "https://")

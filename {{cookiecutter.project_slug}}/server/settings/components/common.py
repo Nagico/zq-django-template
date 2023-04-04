@@ -71,7 +71,10 @@ USE_TZ = True
 CORS_ORIGIN_WHITELIST = (
     "http://127.0.0.1:8000",
     "http://localhost:8000",
-    # ADD YOUR DOMAIN HERE
+    "https://{{cookiecutter.project_name}}.ziqiang.net.cn",
+    "https://api.{{cookiecutter.project_name}}.ziqiang.net.cn",
+    "https://test.{{cookiecutter.project_name}}.ziqiang.net.cn",
+    "https://api.test.{{cookiecutter.project_name}}.ziqiang.net.cn",
 )
 
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
