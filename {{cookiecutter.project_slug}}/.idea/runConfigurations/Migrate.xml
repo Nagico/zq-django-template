@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Migrate" type="PythonConfigurationType" factoryName="Python" folderName="Local Tools">
-    <module name="{{cookiecutter.project_name}}" />
+    <module name="{{cookiecutter.project_slug}}" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
@@ -9,7 +9,7 @@
       <env name="PYTHONUNBUFFERED" value="1" />
     </envs>
     <option name="SDK_HOME" value="" />
-    <option name="SDK_NAME" value="{{cookiecutter.project_name}}" />
+    <option name="SDK_NAME" value="{{cookiecutter.project_slug}}" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <option name="IS_MODULE_SDK" value="false" />
     <option name="ADD_CONTENT_ROOTS" value="true" />

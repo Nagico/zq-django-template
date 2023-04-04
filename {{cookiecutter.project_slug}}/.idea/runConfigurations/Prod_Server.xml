@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Local Server" type="Python.DjangoServer" factoryName="Django server">
-    <module name="{{cookiecutter.project_name}}" />
+  <configuration default="false" name="Prod Server" type="Python.DjangoServer" factoryName="Django server">
+    <module name="{{cookiecutter.project_slug}}" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
-      <env name="DJANGO_ENV" value="development" />
+      <env name="DJANGO_ENV" value="production" />
       <env name="DRF_API_LOGGER_METHODS" value="GET,POST,PUT,DELETE,PATCH" />
       <env name="LOG_LEVEL" value="INFO" />
     </envs>
