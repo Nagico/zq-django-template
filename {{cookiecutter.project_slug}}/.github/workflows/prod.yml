@@ -94,6 +94,6 @@ jobs:
           username: {% raw %}${{ secrets.SSH_USERNAME }}{% endraw %}
           password: {% raw %}${{ secrets.SSH_PASSWORD }}{% endraw %}
           script: |
-            cd ~/{{cookiecutter.project_name}}
+            cd ~/backend
             {% raw %}docker login registry-vpc.registry.cn-hangzhou.aliyuncs.com --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}{% endraw %}
             docker compose pull

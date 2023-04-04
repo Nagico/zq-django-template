@@ -19,6 +19,6 @@ jobs:
           username: {% raw %}${{ secrets.SSH_USERNAME }}{% endraw %}
           password: {% raw %}${{ secrets.SSH_PASSWORD }}{% endraw %}
           script: |
-            cd ~/{{cookiecutter.project_name}}
+            cd ~/backend
             docker compose up -d --remove-orphans
             docker image prune -f
