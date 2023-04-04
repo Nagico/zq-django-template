@@ -77,7 +77,7 @@ services:
       - ./.env
     volumes:
       - ./meili_data:/meili_data
-{ %- endif % }
+{%- endif %}
 
 ### Add Network Bridge info #########################################
 networks:
