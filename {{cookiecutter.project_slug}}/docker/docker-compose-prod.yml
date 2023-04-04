@@ -64,7 +64,7 @@ services:
     expose:
       - 5555
 {%- endif %}
-{ %- if cookiecutter.use_meilisearch == 'y' % }
+{%- if cookiecutter.use_meilisearch == 'y' %}
 
   ### Celery container ########################################
   meili:
