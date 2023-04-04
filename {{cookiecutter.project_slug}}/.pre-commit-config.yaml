@@ -9,6 +9,9 @@ repos:
       - id: check-merge-conflict
       - id: fix-byte-order-marker
       - id: forbid-submodules
+      - id: mixed-line-ending
+        args: [ '--fix=lf' ]
+        description: Forces to replace line ending by the UNIX 'lf' character.
 
   - repo: https://github.com/psf/black
     rev: 23.3.0
