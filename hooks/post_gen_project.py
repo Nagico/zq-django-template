@@ -192,6 +192,10 @@ def remove_wechat():
 
 
 def main():
+    shutil.copyfile(
+        os.path.join("config", ".env.template"), os.path.join("config", ".env.example")
+    )
+
     set_flags_in_envs()
 
     if "{{ cookiecutter.use_celery }}".lower() == "n":
