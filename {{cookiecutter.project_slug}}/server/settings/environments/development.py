@@ -4,10 +4,12 @@ This file contains all the settings that defines the development server.
 SECURITY WARNING: don't run with debug turned on in production!
 """
 
-from loguru import logger
 import socket
 
-from server.settings.components.common import INSTALLED_APPS, MIDDLEWARE
+from loguru import logger
+
+from server.settings.util import config
+from server.settings.components.apps import INSTALLED_APPS, MIDDLEWARE
 from server.settings.components.drf import REST_FRAMEWORK
 
 # Setting the development status:
