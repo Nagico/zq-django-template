@@ -12,7 +12,7 @@ ALLOWED_HOSTS = [
     "api.test.{{cookiecutter.project_name}}.ziqiang.net.cn",
 ]
 
-SERVER_URL = config("SERVER_URL", "https://")
+SERVER_URL = config("SERVER_URL", "https://api.{{cookiecutter.project_name}}.ziqiang.net.cn")
 
 # region Cache
 # Redis
