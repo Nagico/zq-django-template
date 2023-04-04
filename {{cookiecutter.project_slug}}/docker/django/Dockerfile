@@ -77,14 +77,13 @@ COPY ./docker/django/gunicorn_config.py gunicorn_config.py
 
 COPY ./docker/django/start.sh start.sh
 RUN sed -i 's/\r$//g' start.sh && chmod +x start.sh
-
 {%- if cookiecutter.use_celery == 'y' %}
 COPY ./docker/django/celery/worker/start.sh start-celeryworker.sh
 COPY ./docker/django/celery/beat/start.sh start-celerybeat.sh
 COPY ./docker/django/celery/flower/start.sh start-flower.sh
 RUN sed -i 's/\r$//g' start-celeryworker.sh && chmod +x start-celeryworker.sh \
     && sed -i 's/\r$//g' start-celerybeat.sh && chmod +x start-celerybeat.sh \
-    && sed -i 's/\r$//g' start-flower.sh && chmod +x start-flower.sh \
+    && sed -i 's/\r$//g' start-flower.sh && chmod +x start-flower.sh
 {%- endif %}
 
 # copy application code to WORKDIR
