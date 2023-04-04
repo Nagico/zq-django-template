@@ -18,11 +18,12 @@ class WechatCache(SessionStorage):
         self.cache.delete(key)
 
 
-wechat_client = WeChatClient(
-    settings.WECHAT_APPID,
-    settings.WECHAT_SECRET,
-    session=WechatCache(caches["third_session"]),
-)
+if settings.WECHAT_APPID:
+    wechat_client = WeChatClient(
+        settings.WECHAT_APPID,
+        settings.WECHAT_SECRET,
+        session=WechatCache(caches["third_session"]),
+    )
 
 
 ENV_VERSION = "release"

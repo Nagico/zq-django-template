@@ -16,9 +16,9 @@ from zq_django_util.utils.auth.serializers import (
 from users.models import User
 from oauth.utils import VerifyCodeUtil
 from oauth.backends import UnionIdBackend
-from server.bussiness.ziqiang.auth import get_union_id
+from server.business.ziqiang.auth import get_union_id
 {%- if cookiecutter.use_wechat == 'y' %}
-from server.bussiness.wechat.wxa import get_openid
+from server.business.wechat.wxa import get_openid
 {%- endif %}
 {%- if cookiecutter.use_wechat == 'y' %}
 

@@ -10,7 +10,7 @@ from zq_auth_sdk import (
 from zq_django_util.exceptions import ApiException
 from zq_django_util.response import ResponseType
 
-from server.bussiness.ziqiang import zq_client
+from server.business.ziqiang import zq_client
 
 
 def get_union_id(code: str) -> UUID:

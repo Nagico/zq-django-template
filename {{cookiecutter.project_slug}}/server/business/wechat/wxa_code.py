@@ -1,6 +1,6 @@
 from django.core.files.base import ContentFile
 
-from server.bussiness.wechat.wxa import get_wxa_code
+from server.business.wechat.wxa import get_wxa_code
 
 
 def get_wxa_code_bytes(

@@ -5,7 +5,7 @@ from wechatpy import WeChatClientException
 from zq_django_util.exceptions import ApiException
 from zq_django_util.response import ResponseType
 
-from server.bussiness.wechat import ENV_VERSION, wechat_client
+from server.business.wechat import ENV_VERSION, wechat_client
 
 
 def get_openid(code: str) -> str:
