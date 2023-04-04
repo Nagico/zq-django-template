@@ -28,7 +28,6 @@ services:
   redis:
     image: registry-vpc.cn-hangzhou.aliyuncs.com/ziqiang_studio/redis:latest
     container_name: {{cookiecutter.project_name}}-redis
-    restart: always
     networks:
       - app-net
 
@@ -70,7 +69,6 @@ services:
   meili:
     image: registry-vpc.cn-hangzhou.aliyuncs.com/ziqiang_studio/meilisearch:v1.0.2
     container_name: {{cookiecutter.project_name}}-meilisearch
-    restart: always
     networks:
       - app-net
     env_file:
