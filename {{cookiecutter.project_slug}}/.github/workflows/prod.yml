@@ -79,7 +79,7 @@ jobs:
       - name: {% raw %}build and push docker image ${{ matrix.image }}{% endraw %}
         run: |
           {% raw %}docker login registry.cn-hangzhou.aliyuncs.com --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}{% endraw %}
-          docker build -f {% raw %}docker/${{ matrix.image }}/Dockerfile{% endraw %} -t registry.cn-hangzhou.aliyuncs.com/ziqiang_studio/{{cookiecutter.project_name}}:{% raw %}${{ matrix.image }}{% endraw %} .
+          docker build -f {% raw %}docker/${{ matrix.image }}/Dockerfile{% endraw %} -t registry.cn-hangzhou.aliyuncs.com/ziqiang_studio/{{cookiecutter.project_name}}:{% raw %}${{ matrix.image }}{% endraw %} --build-arg DJANGO_ENV=development .
           docker push registry.cn-hangzhou.aliyuncs.com/ziqiang_studio/{{cookiecutter.project_name}}:{% raw %}${{ matrix.image }}{% endraw %}
   deploy:
     runs-on: ubuntu-latest
