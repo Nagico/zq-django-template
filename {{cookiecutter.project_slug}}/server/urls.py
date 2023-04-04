@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 from rest_framework import routers
 
 from zq_django_util.utils.views import APIRootViewSet
@@ -12,6 +13,12 @@ router.register("", APIRootViewSet, basename="test")
 urlpatterns = [
     path("admin/", admin.site.urls),  # admin 后台管理
     path("api-auth/", include('rest_framework.urls')),  # drf 自带的登录认证
+    path(
+        "favicon.ico",
+        RedirectView.as_view(
+            url="https://zq-public-oss.oss-cn-hangzhou.aliyuncs.com/zq-auth/backend/static/static/favorite.ico"
+        ),
+    ),
     path("", include("oauth.urls")),  # 登录
     path("users/", include("users.urls")),  # 用户信息
     path("files/", include("files.urls")),  # 文件
