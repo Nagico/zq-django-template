@@ -16,7 +16,8 @@ cookiecutter gh:Nagico/zq-django-template
 
 ### 1.3. 输入项目信息
 
-- project_name: 项目名称，请根据开发规范进行命名。例如 `zq_recruitment_backend`
+- project_name_short: 项目名称，尽量使用一个英文单词描述，比如招新小程序: `recruitment`
+- project_name: 后端项目完整名称，根据项目名称自动生成，比如招新小程序: `zq_recruitment_backend`
 - project_slug: 无需修改，根据项目名称自动生成
 - description: 项目描述，例如 `自强招新小程序后端`
 - author_name: 作者名称，例如自己Github的昵称
@@ -24,6 +25,7 @@ cookiecutter gh:Nagico/zq-django-template
 - use_celery: 是否使用 Celery 异步任务
 - use_wechat: 是否使用微信小程序登录
 - use_sentry: 是否使用 Sentry 监控
+- use_meilisearch: 是否使用 Meilisearch 搜索后端
 
 最后提示 `[SUCCESS]: Project initialized, keep up the good work!` 即创建成功。
 
@@ -34,13 +36,10 @@ cookiecutter gh:Nagico/zq-django-template
 使用 Pycharm 创建 conda 虚拟环境，或者使用以下命令创建虚拟环境：
 
 ```shell
-conda create -n 项目名称 python=版本号(3.8|3.9|3.10)
+conda create -n 项目名称 python=版本号(3.9|3.10|3.11)
 ```
 
-**注意：** 请使用 Python 3.8+ 版本
-
-> 若要使用 Python 3.11，需要使用以下命令创建虚拟环境：
-> conda create -n 项目名称 python=3.11 -c conda-forge
+**注意：** 请使用 Python 3.9+ 版本
 
 ### 2.2. 安装依赖
 
@@ -77,32 +76,46 @@ pre-commit install --hook-type commit-msg
 
 ### 2.4. 初始化环境配置
 
-使用 PyCharm 打开项目，在 `config` 文件夹下有一个 `env` 文件，用于存储项目的环境配置。其中包括
+使用 PyCharm 打开项目，在 `config` 文件夹下有一个 `.env` 文件，用于存储项目的环境配置。
+`config` 下的 `env.example` 文件是一个配置示例，会被提交到 Git 仓库，用于新成员参考。当 `.env` 内修改了配置后，请将配置的说明添加到 `env.example` 中。
+
+默认配置文件包括
 
 - DJANGO_ENV: 项目环境，可选值为 `development`、`production`。不同的项目环境会使用不同的 settings 文件
 - DJANGO_SECRET_KEY: 项目密钥，会自动随机生成
 - CACHE_URL: 缓存地址，可以根据格式填写。当注释到这一行时，会使用默认的本地缓存
 - DATABASE_URL: 数据库地址，可以根据格式填写。当注释到这一行时，会使用默认的本地 SQLite 数据库
 
-Celery 相关：
+#### Celery
 - CELERY_BROKER_URL: Celery 任务队列地址，推荐与 `CACHE_URL` 使用同一 redis 后端。但最后要以 `/0` 或者其他数字结尾，表示使用 redis 的第几个数据库
 - CELERY_FLOWER_USER: Celery Flower 用户名
 - CELERY_FLOWER_PASSWORD: Celery Flower 密码
 
-微信相关：
+#### 微信
 - WECHAT_APP_ID: 小程序 AppID
 - WECHAT_APP_SECRET: 小程序 AppSecret
 
-Sentry 相关：
+#### Sentry
 - SENTRY_ENABLE: 是否启用 Sentry
 - SENTRY_DSN: Sentry DSN
 
-OSS 相关：
+#### OSS
 - ALIYUN_OSS_ACCESS_KEY_ID: OSS Access Key ID
 - ALIYUN_OSS_ACCESS_KEY_SECRET: OSS Access Key Secret
 - ALIYUN_OSS_BUCKET_NAME: OSS Bucket
 
 其中 Endpoint 默认为杭州，如需修改可在配置文件中更改
+
+#### MeiliSearch
+- MEILI_URL: 搜索服务地址
+- MEILI_MASTER_KEY: 搜索服务密码(若无密码则可删除该项)
+
+#### Ziqiang Auth
+接入自强 Auth 需要手动向管理员申请，并提供必要信息注册 APP，获取 APPID 和 SECRET
+
+- ZQAUTH_APPID: APPID
+- ZQAUTH_SECRET: SECRET
+
 
 ## 3. 项目运行
 
@@ -118,6 +131,7 @@ OSS 相关：
 - Makemigrations: 生成迁移文件，使用 development 配置
 - Migrate: 执行迁移，使用 development 配置
 - Shell: 进入 Django Shell，使用 development 配置
+- Test All with pytest: 运行所有测试，使用 development 配置
 
 选择 `Local Server` 运行后，会在 `http://localhost:8000` 启动一个 Django 服务器。打开网站后会看到测试 ViewSet。
 
@@ -141,7 +155,8 @@ zq_xxx_backend/  项目根目录
   |  | workflows/  Github Actions 配置
   |
   | config/  项目配置（不会上传至 Git 仓库）
-  | | .env  环境配置
+  | | .env  环境配置（不会上传至 Git 仓库）
+  | | .env.example 环境配置示例，请勿在此文件中填写真实配置
   |
   | docker/  docker 配置
   | logs/  日志（不会上传至 Git 仓库）
@@ -151,7 +166,7 @@ zq_xxx_backend/  项目根目录
   |  |  |  | management/  用于添加 runcelery 命令，可以快速启动 celery 用于调试
   |  |  |
   |  |  | files/  OSS 文件（示例）服务器上传 + OSS 直传
-  |  |  | oauth/  登录与 jwt 认证（示例）包括微信登录、openid 登录（测试）、账号密码登录
+  |  |  | oauth/  登录与 jwt 认证（示例）包括微信登录、openid 登录（测试）、账号密码登录、zq_auth统一认证
   |  |  | users/  用户（示例）可仿照 models.py 进行自定义字段
   |  |
   |  | settings/  项目配置
@@ -161,7 +176,10 @@ zq_xxx_backend/  项目根目录
   |  |
   |  | templates/  模板文件，几乎没有用
   |  | utils/  工具函数
-  |  |  | choices.py  公共的枚举类
+  |  |  | choices/  公共的枚举类
+  |  |  |  | status.py  状态
+  |  |  |  | types.py  类型
+  |  |  |
   |  |  | logging_handler.py  loguru 日志处理器
   |  |  | permissions.py  权限控制
   |  |  | serializers.py  可公用的序列化器
