@@ -1,7 +1,8 @@
 version: "3.8"
+name: {{cookiecutter.project_slug}}-test
 
 x-django: &django
-  image: registry.cn-hangzhou.aliyuncs.com/ziqiang_studio/{{cookiecutter.project_name}}:django-test
+  image: registry-vpc.cn-hangzhou.aliyuncs.com/ziqiang_studio/{{cookiecutter.project_name}}:django-test
   env_file: ./.env # ENV file
   depends_on:
     - redis
@@ -11,8 +12,7 @@ x-django: &django
 services:
   ### Caddy container #########################################
   caddy:
-    image: registry.cn-hangzhou.aliyuncs.com/ziqiang_studio/caddy:latest
-    container_name: {{cookiecutter.project_name}}-caddy
+    image: registry-vpc.cn-hangzhou.aliyuncs.com/ziqiang_studio/caddy:latest
     depends_on:
       - django
     networks:
@@ -26,15 +26,13 @@ services:
 
   ### Redis container ##########################################
   redis:
-    image: registry.cn-hangzhou.aliyuncs.com/ziqiang_studio/redis:latest
-    container_name: {{cookiecutter.project_name}}-redis
+    image: registry-vpc.cn-hangzhou.aliyuncs.com/ziqiang_studio/redis:latest
     networks:
       - app-net
 
   ### Django container #########################################
   django:
     <<: *django
-    container_name: {{cookiecutter.project_name}}-django
     volumes:
       - ./log:/app/logs:rw
 {%- if cookiecutter.use_celery == 'y' %}
@@ -42,21 +40,18 @@ services:
   ### Celery container ########################################
   celeryworker:
     <<: *django
-    container_name: {{cookiecutter.project_name}}-celeryworker
     entrypoint: ./start-celeryworker.sh
     healthcheck:
       disable: true
 
   celerybeat:
     <<: *django
-    container_name: {{cookiecutter.project_name}}-celerybeat
     entrypoint: ./start-celerybeat.sh
     healthcheck:
       disable: true
 
   flower:
     <<: *django
-    container_name: {{cookiecutter.project_name}}-flower
     entrypoint: ./start-flower.sh
     healthcheck:
       disable: true
@@ -67,8 +62,7 @@ services:
 
   ### Celery container ########################################
   meili:
-    image: registry.cn-hangzhou.aliyuncs.com/ziqiang_studio/meilisearch:v1.0.2
-    container_name: {{cookiecutter.project_name}}-meilisearch
+    image: registry-vpc.cn-hangzhou.aliyuncs.com/ziqiang_studio/meilisearch:v1.0.2
     networks:
       - app-net
     env_file:
