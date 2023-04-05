@@ -95,7 +95,7 @@ jobs:
           password: {% raw %}${{ secrets.TEST_SSH_PASSWORD }}{% endraw %}
           script: |
             cd ~/backend-test
-            {% raw %}docker login registry.cn-hangzhou.aliyuncs.com --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}{% endraw %}
-            docker-compose pull
-            docker-compose up -d --remove-orphans
+            {% raw %}docker login registry-vpc.cn-hangzhou.aliyuncs.com --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}{% endraw %}
+            docker compose pull
+            docker compose up -d --remove-orphans
             docker image prune -f
