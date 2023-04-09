@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from rest_framework import routers
 
 from zq_django_util.utils.views import APIRootViewSet
@@ -37,6 +38,18 @@ if settings.DEBUG:  # pragma: no cover
         # URLs specific only to django-debug-toolbar:
         path("__debug__/", include(debug_toolbar.urls)),
         *urlpatterns,
+        # Docs:
+        path("docs/schema/", SpectacularAPIView.as_view(), name="schema"),
+        path(
+            "docs/",
+            SpectacularSwaggerView.as_view(url_name="schema"),
+            name="swagger-ui",
+        ),  # swagger接口文档
+        path(
+            "docs/redoc/",
+            SpectacularRedocView.as_view(url_name="schema"),
+            name="redoc",
+        ),  # redoc接口文档
         # Serving media files in development only:
         *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
         *static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),
