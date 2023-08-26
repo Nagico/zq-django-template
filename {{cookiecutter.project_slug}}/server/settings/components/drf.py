@@ -1,3 +1,5 @@
+from server import __version__ as server_version
+
 # region DRF
 REST_FRAMEWORK = {
     # 异常处理
@@ -29,5 +31,13 @@ REST_FRAMEWORK_EXTENSIONS = {
     "DEFAULT_CACHE_RESPONSE_TIMEOUT": 60 * 30,
     # 缓存存储
     "DEFAULT_USE_CACHE": "view",
+}
+# endregion
+
+# DRF文档
+SPECTACULAR_SETTINGS = {
+    "TITLE": "{{ cookiecutter.project_slug }}接口文档",
+    "DESCRIPTION": "[repo](https://github.com/ZiqiangStudio/{{ cookiecutter.project_slug }}/)",
+    "VERSION": server_version,
 }
 # endregion
